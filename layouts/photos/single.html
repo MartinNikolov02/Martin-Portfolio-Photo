@@ -1,0 +1,46 @@
+{{ define "main" }}
+<div class="mx-auto w-full max-w-5xl px-4 py-6">
+  <a href="{{ "/photos/" | relURL }}" class="text-sm underline">← back to photo portfolio</a>
+  <h1 class="text-3xl font-bold mt-2 mb-1">{{ .Title }}</h1>
+  {{ with .Params.category }}<div class="text-sm text-gray-300 mb-4">{{ . }}</div>{{ end }}
+  {{ .Content }}
+
+  {{ $images := .Resources.ByType "image" }}
+  <div class="columns-2 sm:columns-3 gap-3 mt-6 [&>*]:mb-3">
+    {{ range $i, $img := $images }}
+      <a href="#lightbox-{{ $i }}" class="block break-inside-avoid">
+        <img src="{{ .RelPermalink }}" alt="{{ $.Title }} {{ add $i 1 }}" class="w-full rounded-lg border border-white hover:border-pink-300 transition-all duration-150">
+      </a>
+    {{ end }}
+  </div>
+
+  {{/* Pure-CSS lightbox: no JS needed. Each image gets a full-screen overlay
+       toggled by the URL fragment (#lightbox-N). Click the image to close. */}}
+  {{ range $i, $img := $images }}
+    <a href="#" id="lightbox-{{ $i }}" class="lightbox-overlay">
+      <img src="{{ .RelPermalink }}" alt="{{ $.Title }} {{ add $i 1 }}">
+    </a>
+  {{ end }}
+</div>
+
+<style>
+  .lightbox-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.9);
+    z-index: 50;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  .lightbox-overlay:target {
+    display: flex;
+  }
+  .lightbox-overlay img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 0.5rem;
+  }
+</style>
+{{ end }}

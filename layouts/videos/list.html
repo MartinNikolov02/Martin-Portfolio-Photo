@@ -1,0 +1,16 @@
+{{ define "main" }}
+<div class="mx-auto w-full max-w-4xl px-4 py-6">
+  <h1 class="text-3xl font-bold mb-4">{{ .Title }}</h1>
+  {{ .Content }}
+
+  <div class="grid gap-6 mt-8">
+    {{ range .Pages.ByDate.Reverse }}
+      <a href="{{ .RelPermalink }}" class="not-prose flex cursor-pointer flex-col space-y-2 rounded-lg border border-white p-4 transition-all duration-150 hover:border-pink-300">
+        <div class="font-semibold">{{ .Title }}</div>
+        <div class="text-xs text-gray-400">{{ .Date.Format "January 2006" }}</div>
+        {{ with .Summary }}<div class="text-sm text-gray-300">{{ . | plainify | truncate 140 }}</div>{{ end }}
+      </a>
+    {{ end }}
+  </div>
+</div>
+{{ end }}

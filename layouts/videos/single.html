@@ -1,0 +1,31 @@
+{{ define "main" }}
+<div class="mx-auto w-full max-w-4xl px-4 py-6">
+  <a href="{{ "/videos/" | relURL }}" class="text-sm underline">← back to video portfolio</a>
+  <h1 class="text-3xl font-bold mt-2 mb-4">{{ .Title }}</h1>
+
+  {{ $embedURL := "" }}
+  {{ with .Params.videoUrl }}
+    {{ if in . "youtube.com/watch" }}
+      {{ $id := index (split . "v=") 1 }}
+      {{ $id = index (split $id "&") 0 }}
+      {{ $embedURL = printf "https://www.youtube.com/embed/%s" $id }}
+    {{ else if in . "youtu.be/" }}
+      {{ $id := index (split . "youtu.be/") 1 }}
+      {{ $embedURL = printf "https://www.youtube.com/embed/%s" $id }}
+    {{ else if in . "vimeo.com/" }}
+      {{ $id := index (split . "vimeo.com/") 1 }}
+      {{ $embedURL = printf "https://player.vimeo.com/video/%s" $id }}
+    {{ end }}
+  {{ end }}
+
+  {{ with $embedURL }}
+    <div class="rounded-lg border border-white overflow-hidden" style="aspect-ratio: 16/9;">
+      <iframe src="{{ . }}" class="w-full h-full" allowfullscreen loading="lazy"></iframe>
+    </div>
+  {{ end }}
+
+  <div class="mt-4">
+    {{ .Content }}
+  </div>
+</div>
+{{ end }}
