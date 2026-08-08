@@ -2,7 +2,7 @@
 {{ $p := .Params }}
 <div class="grid lg:grid-cols-2 gap-4">
 	<div class="not-prose flex cursor-default flex-col space-y-4 rounded-lg border border-white p-4">
-		<img src="{{ or $p.portraitImage "/portrait.png" }}" alt="Portrait" class="w-full h-auto">
+		<img src="{{ (or $p.portraitImage "portrait.png") | relURL }}" alt="Portrait" class="w-full h-auto">
 		<div>
 			{{ with $p.introTitle }}<strong>{{ . }}</strong>{{ end }}
 			{{ with $p.introBody }}{{ . | markdownify }}{{ end }}
@@ -10,15 +10,15 @@
 	</div>
 	<div class="grid lg:grid-rows-2 gap-4">
 		<div class="not-prose flex cursor-default flex-col space-y-2 rounded-lg border border-white p-6">
-			<img src="{{ or $p.statusImage "/status.png" }}" alt="Status" class="self-start">
+			<img src="{{ (or $p.statusImage "status.png") | relURL }}" alt="Status" class="self-start">
 			{{ with $p.statusText }}<div>{{ . | markdownify }}</div>{{ end }}
 		</div>
 		<div class="grid grid-cols-2 gap-4">
-			<a href="{{ "/photos/" | relURL }}" class="not-prose flex cursor-pointer flex-col items-center justify-center space-y-2 rounded-lg border border-white p-4 text-center transition-all duration-150 hover:border-pink-300">
+			<a href="{{ "photos/" | relURL }}" class="not-prose flex cursor-pointer flex-col items-center justify-center space-y-2 rounded-lg border border-white p-4 text-center transition-all duration-150 hover:border-pink-300">
 				<span class="text-lg font-semibold">📷</span>
 				<span>Photo Portfolio</span>
 			</a>
-			<a href="{{ "/videos/" | relURL }}" class="not-prose flex cursor-pointer flex-col items-center justify-center space-y-2 rounded-lg border border-white p-4 text-center transition-all duration-150 hover:border-pink-300">
+			<a href="{{ "videos/" | relURL }}" class="not-prose flex cursor-pointer flex-col items-center justify-center space-y-2 rounded-lg border border-white p-4 text-center transition-all duration-150 hover:border-pink-300">
 				<span class="text-lg font-semibold">🎬</span>
 				<span>Video Portfolio</span>
 			</a>

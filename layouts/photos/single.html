@@ -1,6 +1,6 @@
 {{ define "main" }}
 <div class="mx-auto w-full max-w-5xl px-4 py-6">
-  <a href="{{ "/photos/" | relURL }}" class="text-sm underline">← back to photo portfolio</a>
+  <a href="{{ "photos/" | relURL }}" class="text-sm underline">← back to photo portfolio</a>
   <h1 class="text-3xl font-bold mt-2 mb-1">{{ .Title }}</h1>
   {{ with .Params.category }}<div class="text-sm text-gray-300 mb-4">{{ . }}</div>{{ end }}
   {{ .Content }}
