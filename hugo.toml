@@ -19,11 +19,6 @@ theme = 'digio-theme'
     pageRef = '/videos'
     weight = 3
 
-  [[menus.main]]
-    name = 'me'
-    pageRef = '/me'
-    weight = 4
-
 [module]
   [module.hugoVersion]
     extended = true
