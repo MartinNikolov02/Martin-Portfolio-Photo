@@ -29,14 +29,14 @@ hobbies = [
 # Your pets. Add/remove entries freely — the "hp" field just controls
 # how full the little pixel bar looks (0–100), purely for fun.
 [[pets]]
-  name = "Your Cat"
-  type = "Cat"
-  emoji = "🐱"
+  name = "Aron"
+  type = "Dog"
+  image = "dog.png"
   hp = 100
 
 [[pets]]
-  name = "Your Dog"
-  type = "Dog"
-  emoji = "🐶"
-  hp = 100
+  name = "Car"
+  type = "Cat"
+  image = "cat.png"
+  hp = 50
 +++
