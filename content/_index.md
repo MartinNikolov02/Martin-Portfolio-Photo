@@ -6,8 +6,8 @@
 portraitImage = "portrait.png"
 
 introTitle = "Hi, I'm Martin!"
-introBody = "I shoot events — weddings, baptisms, graduations — on a Canon EOS R50, and I'm slowly building this out into a full portfolio. Outside of photography I run marathons, play football, and work in cybersecurity. Take a look around."
+introBody = "I like trying new things in my free time, and photography and videography are two of them. Outside of that I run marathons, play football, and work in cybersecurity. Take a look around."
 
 statusImage = "status.png"
-statusText = "Studying for my AZ-900 exam and lining up my next shoot 📸 — edit this line any time your focus shifts."
+statusText = "You don't have to be great to start, but you have to start to be great."
 +++
