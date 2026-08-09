@@ -8,29 +8,7 @@
 			{{ with $p.introBody }}{{ . | markdownify }}{{ end }}
 		</div>
 	</div>
-	<div class="grid lg:grid-rows-3 gap-4">
-		{{ with $p.pets }}
-		<div class="not-prose flex cursor-default flex-col space-y-2 rounded-lg border border-white p-6">
-			<h2 class="text-lg font-semibold tracking-wide">pets</h2>
-			<div class="space-y-2">
-				{{ range . }}
-				<div class="flex items-center gap-2">
-					{{ if .image }}
-						<img src="{{ .image | relURL }}" alt="{{ .name }}" style="width: 2.5rem; height: 2.5rem; object-fit: cover; border-radius: 0.375rem; flex-shrink: 0;">
-					{{ else }}
-						<span class="text-xl">{{ .emoji }}</span>
-					{{ end }}
-					<div class="flex-1">
-						<div class="text-xs">{{ .name }}</div>
-						<div class="w-full h-2 rounded border border-white overflow-hidden">
-							<div class="h-full bg-pink-400" style="width: {{ .hp }}%;"></div>
-						</div>
-					</div>
-				</div>
-				{{ end }}
-			</div>
-		</div>
-		{{ end }}
+	<div class="grid lg:grid-rows-2 gap-4">
 		<div class="not-prose flex cursor-default flex-col space-y-2 rounded-lg border border-white p-6">
 			<h2 class="text-lg font-semibold tracking-wide">status</h2>
 			{{ with $p.statusText }}<div>{{ . | markdownify }}</div>{{ end }}
