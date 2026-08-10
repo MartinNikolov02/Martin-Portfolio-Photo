@@ -6,7 +6,7 @@
 			<img src="{{ (or $p.portraitImage "portrait.png") | relURL }}" alt="Portrait" class="w-full rounded-lg" style="height: 12rem; object-fit: contain; object-position: center;">
 			<div style="width: 1px; background: white;"></div>
 			{{ with $p.pets }}
-			<div style="display: flex; flex-direction: column; justify-content: center; gap: 0.6rem;">
+			<div style="display: flex; flex-direction: column; justify-content: flex-start; gap: 0.6rem; padding-top: 0.5rem;">
 				<h2 class="font-semibold" style="font-size: 0.85rem;">Pets:</h2>
 				{{ range . }}
 				<div class="flex gap-2" style="align-items: center;">
