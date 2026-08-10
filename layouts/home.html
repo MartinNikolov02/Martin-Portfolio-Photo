@@ -2,7 +2,7 @@
 {{ $p := .Params }}
 <div class="grid lg:grid-cols-2 gap-4">
 	<div class="not-prose flex cursor-default flex-col space-y-4 rounded-lg border border-white p-4">
-		<div class="grid grid-cols-2 gap-2">
+		<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
 			<img src="{{ (or $p.portraitImage "portrait.png") | relURL }}" alt="Portrait" class="w-full rounded-lg" style="height: 12rem; object-fit: contain; object-position: center;">
 			{{ with $p.pets }}
 			<div class="rounded-lg border border-white p-2" style="display: flex; flex-direction: column; justify-content: center; gap: 0.5rem;">
@@ -15,12 +15,10 @@
 						<span style="font-size: 1rem;">{{ .emoji }}</span>
 					{{ end }}
 					<span style="font-size: 0.75rem;">{{ .name }}</span>
-					<div class="flex-1" style="display: flex; flex-direction: column; align-items: flex-end;">
-						<span style="font-size: 0.55rem; line-height: 1; margin-bottom: 2px;">HP</span>
-						<div class="w-full rounded border border-white" style="height: 0.4rem; overflow: hidden;">
-							<div style="height: 100%; background: white; width: {{ .hp }}%;"></div>
-						</div>
-					</div>
+					{{ $hpImg := "hp.png" }}
+					{{ if lt .hp 75 }}{{ $hpImg = "halfhp.png" }}{{ end }}
+					{{ with .hpImage }}{{ $hpImg = . }}{{ end }}
+					<img src="{{ $hpImg | relURL }}" alt="HP" style="height: 0.9rem; margin-left: auto; flex-shrink: 0;">
 				</div>
 				{{ end }}
 			</div>
@@ -35,7 +33,7 @@
 		<div class="not-prose flex cursor-default flex-col space-y-2 rounded-lg border border-white p-6">
 			{{ with $p.statusText }}<div>{{ . | markdownify }}</div>{{ end }}
 		</div>
-		<div class="grid grid-cols-2 gap-4">
+		<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
 			<a href="{{ "photos/" | relURL }}" class="not-prose flex cursor-pointer flex-col items-center justify-center space-y-2 rounded-lg border border-white p-4 text-center transition-all duration-150 hover:border-pink-300">
 				<span class="text-lg font-semibold">📷</span>
 				<span>Photo Portfolio</span>
