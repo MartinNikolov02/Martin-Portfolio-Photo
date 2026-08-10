@@ -9,4 +9,16 @@ introTitle = "Hi, I'm Martin!"
 introBody = "I like trying new things in my free time, photography and videography are two of them. Outside of that I run marathons, play football, and work in cybersecurity. Take a look around."
 
 statusText = "You don't have to be great to start, but you have to start to be great."
+
+[[pets]]
+  name = "Aron"
+  type = "Dog"
+  image = "dog.png"
+  hp = 100
+
+[[pets]]
+  name = "Car"
+  type = "Cat"
+  image = "cat.png"
+  hp = 50
 +++
