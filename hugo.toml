@@ -11,7 +11,7 @@ theme = 'digio-theme'
 
   [[menus.main]]
     name = 'photos'
-    pageRef = '/photos'
+    pageRef = '/photos/portfolio'
     weight = 2
 
   [[menus.main]]
