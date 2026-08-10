@@ -2,36 +2,36 @@
 {{ $p := .Params }}
 <div class="grid lg:grid-cols-2 gap-4">
 	<div class="not-prose flex cursor-default flex-col space-y-4 rounded-lg border border-white p-4">
-		<img src="{{ (or $p.portraitImage "portrait.png") | relURL }}" alt="Portrait" class="w-full rounded-lg" style="height: 12rem; object-fit: contain; object-position: center;">
-		<div>
-			{{ with $p.introTitle }}<strong>{{ . }}</strong>{{ end }}
-			{{ with $p.introBody }}{{ . | markdownify }}{{ end }}
-		</div>
-	</div>
-	<div class="grid lg:grid-rows-3 gap-4">
-		{{ with $p.pets }}
-		<div class="not-prose flex cursor-default flex-col space-y-2 rounded-lg border border-white p-4">
-			<h2 class="font-semibold">pets:</h2>
-			<div class="space-y-2">
+		<div class="grid grid-cols-2 gap-2">
+			<img src="{{ (or $p.portraitImage "portrait.png") | relURL }}" alt="Portrait" class="w-full rounded-lg" style="height: 12rem; object-fit: contain; object-position: center;">
+			{{ with $p.pets }}
+			<div class="rounded-lg border border-white p-2" style="display: flex; flex-direction: column; justify-content: center; gap: 0.5rem;">
+				<h2 class="font-semibold" style="font-size: 0.85rem;">pets:</h2>
 				{{ range . }}
 				<div class="flex gap-2" style="align-items: center;">
 					{{ if .image }}
-						<img src="{{ .image | relURL }}" alt="{{ .name }}" style="width: 2rem; height: 2rem; object-fit: cover; border-radius: 0.25rem; flex-shrink: 0;">
+						<img src="{{ .image | relURL }}" alt="{{ .name }}" style="width: 1.75rem; height: 1.75rem; object-fit: cover; border-radius: 0.25rem; flex-shrink: 0;">
 					{{ else }}
-						<span style="font-size: 1.1rem;">{{ .emoji }}</span>
+						<span style="font-size: 1rem;">{{ .emoji }}</span>
 					{{ end }}
-					<span class="text-sm">{{ .name }}</span>
+					<span style="font-size: 0.75rem;">{{ .name }}</span>
 					<div class="flex-1" style="display: flex; flex-direction: column; align-items: flex-end;">
-						<span style="font-size: 0.6rem; line-height: 1; margin-bottom: 2px;">HP</span>
-						<div class="w-full rounded border border-white" style="height: 0.5rem; overflow: hidden;">
+						<span style="font-size: 0.55rem; line-height: 1; margin-bottom: 2px;">HP</span>
+						<div class="w-full rounded border border-white" style="height: 0.4rem; overflow: hidden;">
 							<div style="height: 100%; background: white; width: {{ .hp }}%;"></div>
 						</div>
 					</div>
 				</div>
 				{{ end }}
 			</div>
+			{{ end }}
 		</div>
-		{{ end }}
+		<div>
+			{{ with $p.introTitle }}<strong>{{ . }}</strong>{{ end }}
+			{{ with $p.introBody }}{{ . | markdownify }}{{ end }}
+		</div>
+	</div>
+	<div class="grid lg:grid-rows-2 gap-4">
 		<div class="not-prose flex cursor-default flex-col space-y-2 rounded-lg border border-white p-6">
 			{{ with $p.statusText }}<div>{{ . | markdownify }}</div>{{ end }}
 		</div>
