@@ -6,10 +6,10 @@
   {{ .Content }}
 
   {{ $images := .Resources.ByType "image" }}
-  <div class="columns-2 sm:columns-3 gap-3 mt-6 [&>*]:mb-3">
+  <div class="photo-grid">
     {{ range $i, $img := $images }}
-      <a href="#lightbox-{{ $i }}" class="block break-inside-avoid">
-        <img src="{{ .RelPermalink }}" alt="{{ $.Title }} {{ add $i 1 }}" class="w-full rounded-lg border border-white hover:border-pink-300 transition-all duration-150">
+      <a href="#lightbox-{{ $i }}" class="photo-grid-item">
+        <img src="{{ .RelPermalink }}" alt="{{ $.Title }} {{ add $i 1 }}" class="rounded-lg border border-white hover:border-pink-300 transition-all duration-150">
       </a>
     {{ end }}
   </div>
@@ -24,6 +24,25 @@
 </div>
 
 <style>
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+  @media (min-width: 640px) {
+    .photo-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .photo-grid-item {
+    display: block;
+  }
+  .photo-grid-item img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+  }
   .lightbox-overlay {
     display: none;
     position: fixed;
