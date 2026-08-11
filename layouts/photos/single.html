@@ -1,65 +1,423 @@
 {{ define "main" }}
 <div class="mx-auto w-full max-w-5xl px-4 py-6">
-  <a href="{{ "" | relURL }}" class="text-sm underline">← back to home</a>
+
+  <a href="{{ "/" | relURL }}" class="text-sm underline">
+    ← back to home
+  </a>
+
   <h1 class="text-3xl font-bold mt-2 mb-1">{{ .Title }}</h1>
-  {{ with .Params.category }}<div class="text-sm text-gray-300 mb-4">{{ . }}</div>{{ end }}
+
+  {{ with .Params.category }}
+    <div class="text-sm text-gray-300 mb-4">{{ . }}</div>
+  {{ end }}
+
   {{ .Content }}
 
   {{ $images := .Resources.ByType "image" }}
+
   <div class="photo-grid" id="gallery">
+
     {{ range $i, $img := $images }}
-      <a href="#lightbox-{{ $i }}" class="photo-grid-item">
-        <img src="{{ .RelPermalink }}" alt="{{ $.Title }} {{ add $i 1 }}" class="rounded-lg border border-white hover:border-pink-300 transition-all duration-150">
-      </a>
+
+      <button
+        type="button"
+        class="photo-grid-item"
+        onclick="openLightbox({{ $i }})"
+        aria-label="Open photo {{ add $i 1 }}"
+      >
+        <img
+          src="{{ .RelPermalink }}"
+          alt="{{ $.Title }} {{ add $i 1 }}"
+        >
+      </button>
+
     {{ end }}
+
   </div>
 
-  {{/* Pure-CSS lightbox: no JS needed. Each image gets a full-screen overlay
-       toggled by the URL fragment (#lightbox-N). Click the image to close. */}}
-  {{ range $i, $img := $images }}
-    <a href="#gallery" id="lightbox-{{ $i }}" class="lightbox-overlay">
-      <img src="{{ .RelPermalink }}" alt="{{ $.Title }} {{ add $i 1 }}">
-    </a>
-  {{ end }}
 </div>
 
+
+<!-- LIGHTBOX -->
+
+<div
+  id="photo-lightbox"
+  class="lightbox"
+  aria-hidden="true"
+>
+
+  <!-- Close -->
+  <button
+    type="button"
+    class="lightbox-close"
+    onclick="closeLightbox()"
+    aria-label="Close gallery"
+  >
+    ×
+  </button>
+
+  <!-- Previous -->
+  <button
+    type="button"
+    class="lightbox-prev"
+    onclick="previousPhoto()"
+    aria-label="Previous photo"
+  >
+    ‹
+  </button>
+
+  <!-- Image -->
+  <div class="lightbox-content">
+
+    <img
+      id="lightbox-image"
+      src=""
+      alt=""
+    >
+
+    <div
+      id="lightbox-counter"
+      class="lightbox-counter"
+    >
+    </div>
+
+  </div>
+
+  <!-- Next -->
+  <button
+    type="button"
+    class="lightbox-next"
+    onclick="nextPhoto()"
+    aria-label="Next photo"
+  >
+    ›
+  </button>
+
+</div>
+
+
 <style>
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 640px) {
   .photo-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
-    margin-top: 1.5rem;
+    grid-template-columns: repeat(3, 1fr);
   }
-  @media (min-width: 640px) {
-    .photo-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
+}
+
+.photo-grid-item {
+  display: block;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.photo-grid-item img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+  border-radius: 0.5rem;
+  border: 1px solid white;
+  transition: all 0.15s ease;
+}
+
+.photo-grid-item:hover img {
+  border-color: #f9a8d4;
+  transform: scale(1.01);
+}
+
+
+/* =========================
+   LIGHTBOX
+   ========================= */
+
+.lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  background: rgba(0, 0, 0, 0.94);
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 60px 80px;
+}
+
+.lightbox.active {
+  display: flex;
+}
+
+
+/* Image */
+
+.lightbox-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100%;
+}
+
+#lightbox-image {
+  max-width: 90vw;
+  max-height: 82vh;
+
+  object-fit: contain;
+
+  border-radius: 0.5rem;
+}
+
+
+/* Counter */
+
+.lightbox-counter {
+  margin-top: 12px;
+
+  color: white;
+  font-size: 14px;
+
+  opacity: 0.8;
+}
+
+
+/* Buttons */
+
+.lightbox-close,
+.lightbox-prev,
+.lightbox-next {
+  position: absolute;
+
+  border: none;
+  background: transparent;
+
+  color: white;
+
+  cursor: pointer;
+
+  z-index: 10000;
+
+  transition: opacity 0.15s ease;
+}
+
+.lightbox-close:hover,
+.lightbox-prev:hover,
+.lightbox-next:hover {
+  opacity: 0.6;
+}
+
+
+/* Close */
+
+.lightbox-close {
+  top: 15px;
+  right: 25px;
+
+  font-size: 45px;
+  line-height: 1;
+}
+
+
+/* Previous */
+
+.lightbox-prev {
+  left: 20px;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  font-size: 70px;
+}
+
+
+/* Next */
+
+.lightbox-next {
+  right: 20px;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  font-size: 70px;
+}
+
+
+/* Mobile */
+
+@media (max-width: 640px) {
+
+  .lightbox {
+    padding: 50px 20px;
   }
-  .photo-grid-item {
-    display: block;
+
+  #lightbox-image {
+    max-width: 95vw;
+    max-height: 75vh;
   }
-  .photo-grid-item img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
+
+  .lightbox-prev {
+    left: 5px;
+    font-size: 50px;
   }
-  .lightbox-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.9);
-    z-index: 50;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
+
+  .lightbox-next {
+    right: 5px;
+    font-size: 50px;
   }
-  .lightbox-overlay:target {
-    display: flex;
+
+  .lightbox-close {
+    right: 15px;
+    font-size: 40px;
   }
-  .lightbox-overlay img {
-    max-width: 100%;
-    max-height: 100%;
-    border-radius: 0.5rem;
-  }
+
+}
+
 </style>
+
+
+<script>
+
+const photoGallery = [
+
+  {{ range $i, $img := $images }}
+
+    {
+      src: "{{ .RelPermalink }}",
+      alt: "{{ $.Title }} {{ add $i 1 }}"
+    }
+
+    {{ if lt (add $i 1) (len $images) }},{{ end }}
+
+  {{ end }}
+
+];
+
+
+let currentPhoto = 0;
+
+
+function openLightbox(index) {
+
+  currentPhoto = index;
+
+  updateLightbox();
+
+  const lightbox = document.getElementById("photo-lightbox");
+
+  lightbox.classList.add("active");
+
+  lightbox.setAttribute("aria-hidden", "false");
+
+  document.body.style.overflow = "hidden";
+}
+
+
+function closeLightbox() {
+
+  const lightbox = document.getElementById("photo-lightbox");
+
+  lightbox.classList.remove("active");
+
+  lightbox.setAttribute("aria-hidden", "true");
+
+  document.body.style.overflow = "";
+
+}
+
+
+function updateLightbox() {
+
+  const image = document.getElementById("lightbox-image");
+
+  const counter = document.getElementById("lightbox-counter");
+
+  const photo = photoGallery[currentPhoto];
+
+  image.src = photo.src;
+
+  image.alt = photo.alt;
+
+  counter.textContent =
+    `${currentPhoto + 1} / ${photoGallery.length}`;
+
+}
+
+
+function nextPhoto() {
+
+  currentPhoto++;
+
+  if (currentPhoto >= photoGallery.length) {
+    currentPhoto = 0;
+  }
+
+  updateLightbox();
+
+}
+
+
+function previousPhoto() {
+
+  currentPhoto--;
+
+  if (currentPhoto < 0) {
+    currentPhoto = photoGallery.length - 1;
+  }
+
+  updateLightbox();
+
+}
+
+
+/* Keyboard controls */
+
+document.addEventListener("keydown", function(event) {
+
+  const lightbox =
+    document.getElementById("photo-lightbox");
+
+  if (!lightbox.classList.contains("active")) {
+    return;
+  }
+
+  if (event.key === "Escape") {
+    closeLightbox();
+  }
+
+  if (event.key === "ArrowRight") {
+    nextPhoto();
+  }
+
+  if (event.key === "ArrowLeft") {
+    previousPhoto();
+  }
+
+});
+
+
+/* Click outside image to close */
+
+document
+  .getElementById("photo-lightbox")
+  .addEventListener("click", function(event) {
+
+    if (event.target === this) {
+      closeLightbox();
+    }
+
+  });
+
+</script>
+
 {{ end }}
