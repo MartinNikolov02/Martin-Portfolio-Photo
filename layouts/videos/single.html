@@ -5,7 +5,7 @@
   {{ .Content }}
 
   {{ $p := .Params }}
-  <div class="photo-grid">
+  <div class="photo-grid" id="gallery">
     {{ range $i, $clip := $p.clips }}
       {{ $res := $.Resources.Get $clip.file }}
       {{ with $res }}
@@ -23,7 +23,7 @@
   {{ range $i, $clip := $p.clips }}
     {{ $res := $.Resources.Get $clip.file }}
     {{ with $res }}
-    <a href="#" id="lightbox-{{ $i }}" class="lightbox-overlay">
+    <a href="#gallery" id="lightbox-{{ $i }}" class="lightbox-overlay">
       <video controls style="max-width: 100%; max-height: 100%; border-radius: 0.5rem;" preload="metadata">
         <source src="{{ .RelPermalink }}">
       </video>

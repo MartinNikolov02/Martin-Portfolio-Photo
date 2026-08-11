@@ -6,7 +6,7 @@
   {{ .Content }}
 
   {{ $images := .Resources.ByType "image" }}
-  <div class="photo-grid">
+  <div class="photo-grid" id="gallery">
     {{ range $i, $img := $images }}
       <a href="#lightbox-{{ $i }}" class="photo-grid-item">
         <img src="{{ .RelPermalink }}" alt="{{ $.Title }} {{ add $i 1 }}" class="rounded-lg border border-white hover:border-pink-300 transition-all duration-150">
@@ -17,7 +17,7 @@
   {{/* Pure-CSS lightbox: no JS needed. Each image gets a full-screen overlay
        toggled by the URL fragment (#lightbox-N). Click the image to close. */}}
   {{ range $i, $img := $images }}
-    <a href="#" id="lightbox-{{ $i }}" class="lightbox-overlay">
+    <a href="#gallery" id="lightbox-{{ $i }}" class="lightbox-overlay">
       <img src="{{ .RelPermalink }}" alt="{{ $.Title }} {{ add $i 1 }}">
     </a>
   {{ end }}
