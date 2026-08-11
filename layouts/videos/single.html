@@ -1,55 +1,72 @@
 {{ define "main" }}
 <div class="mx-auto w-full max-w-5xl px-4 py-6">
-  <a href="{{ "/" | relURL }}" class="text-sm underline">← back to home</a>
+  <a href="{{ "" | relURL }}" class="text-sm underline">← back to home</a>
   <h1 class="text-3xl font-bold mt-2 mb-6">{{ .Title }}</h1>
 
   {{ $p := .Params }}
-  <div class="video-grid">
-    {{ range $p.clips }}
-      {{ $file := .file }}
-      {{ $title := .title }}
-      {{ $res := $.Resources.Get $file }}
+  <div class="photo-grid">
+    {{ range $i, $clip := $p.clips }}
+      {{ $res := $.Resources.Get $clip.file }}
       {{ with $res }}
-      <div class="video-grid-item">
-        <video controls style="width: 100%; height: 100%; display: block; object-fit: cover;" preload="metadata">
+      <a href="#lightbox-{{ $i }}" class="photo-grid-item">
+        <video style="width: 100%; height: 220px; object-fit: cover; display: block;" preload="metadata" muted playsinline>
           <source src="{{ .RelPermalink }}">
-          Your browser doesn't support embedded video.
         </video>
-        <div class="video-grid-caption">{{ $title }}</div>
-      </div>
+      </a>
       {{ end }}
     {{ end }}
   </div>
+
+  {{/* Pure-CSS lightbox, same pattern as the photo gallery: click a
+       thumbnail to open a full-size playable video overlay. */}}
+  {{ range $i, $clip := $p.clips }}
+    {{ $res := $.Resources.Get $clip.file }}
+    {{ with $res }}
+    <a href="#" id="lightbox-{{ $i }}" class="lightbox-overlay">
+      <video controls style="max-width: 100%; max-height: 100%; border-radius: 0.5rem;" preload="metadata">
+        <source src="{{ .RelPermalink }}">
+      </video>
+    </a>
+    {{ end }}
+  {{ end }}
 
   {{ .Content }}
 </div>
 
 <style>
-  .video-grid {
+  .photo-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 0.75rem;
     margin-top: 1rem;
   }
   @media (min-width: 640px) {
-    .video-grid {
+    .photo-grid {
       grid-template-columns: repeat(3, 1fr);
     }
   }
-  .video-grid-item {
-    display: flex;
-    flex-direction: column;
-    border: 1px solid white;
+  .photo-grid-item {
+    display: block;
+  }
+  .photo-grid-item video {
     border-radius: 0.5rem;
-    overflow: hidden;
+    border: 1px solid white;
   }
-  .video-grid-item video {
-    height: 220px;
-    background: black;
+  .photo-grid-item:hover video {
+    border-color: #f9a8d4;
   }
-  .video-grid-caption {
-    padding: 0.4rem 0.6rem;
-    font-size: 0.75rem;
+  .lightbox-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.9);
+    z-index: 50;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  .lightbox-overlay:target {
+    display: flex;
   }
 </style>
 {{ end }}
