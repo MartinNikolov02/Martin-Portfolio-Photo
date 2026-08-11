@@ -16,7 +16,7 @@ theme = 'digio-theme'
 
   [[menus.main]]
     name = 'videos'
-    pageRef = '/videos'
+    pageRef = '/videos/portfolio'
     weight = 3
 
 [module]
