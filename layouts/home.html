@@ -19,7 +19,7 @@
 					{{ $hpImg := "hp.png" }}
 					{{ if lt .hp 75 }}{{ $hpImg = "halfhp.png" }}{{ end }}
 					{{ with .hpImage }}{{ $hpImg = . }}{{ end }}
-					<img src="{{ $hpImg | relURL }}" alt="HP" style="height: 1.4rem; flex-shrink: 0;">
+					<img src="{{ $hpImg | relURL }}" alt="HP" style="height: 1.4rem; flex-shrink: 0; margin-right: 0.5rem;">
 				</div>
 				{{ end }}
 			</div>
