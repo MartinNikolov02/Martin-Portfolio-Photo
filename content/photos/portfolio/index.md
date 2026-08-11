@@ -1,5 +1,5 @@
 +++
-title = "Portfolio"
+title = "Photo Portfolio"
 date = 2026-08-10
 +++
 

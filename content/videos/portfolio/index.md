@@ -1,5 +1,5 @@
 +++
-title = "Portfolio"
+title = "Video Portfolio"
 date = 2026-08-11
 
 [[clips]]
@@ -18,3 +18,5 @@ date = 2026-08-11
   title = "Gym trailer"
   file = "gym-trailer.mp4"
 +++
+
+A collection of frames from different sessions- celebrations, events, and everyday moments.
