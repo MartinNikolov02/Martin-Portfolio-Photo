@@ -1,71 +1,581 @@
 {{ define "main" }}
 <div class="mx-auto w-full max-w-5xl px-4 py-6">
-  <a href="{{ "" | relURL }}" class="text-sm underline">← back to home</a>
-  <h1 class="text-3xl font-bold mt-2 mb-1">{{ .Title }}</h1>
+
+  <a href="{{ "/" | relURL }}" class="text-sm underline">
+    ← back to home
+  </a>
+
+  <h1 class="text-3xl font-bold mt-2 mb-1">
+    {{ .Title }}
+  </h1>
+
   {{ .Content }}
 
+
   {{ $p := .Params }}
-  <div class="photo-grid" id="gallery">
+
+  <div class="video-grid">
+
     {{ range $i, $clip := $p.clips }}
+
       {{ $res := $.Resources.Get $clip.file }}
+
       {{ with $res }}
-      <a href="#lightbox-{{ $i }}" class="photo-grid-item">
-        <video style="width: 100%; height: 220px; object-fit: cover; display: block;" preload="metadata" muted playsinline>
-          <source src="{{ .RelPermalink }}">
-        </video>
-      </a>
+
+        <button
+          type="button"
+          class="video-grid-item"
+          onclick="openVideo({{ $i }})"
+        >
+
+          <video
+            preload="metadata"
+            muted
+            playsinline
+          >
+            <source src="{{ .RelPermalink }}">
+          </video>
+
+          <div class="video-play">
+            ▶
+          </div>
+
+        </button>
+
       {{ end }}
+
     {{ end }}
+
   </div>
 
-  {{/* Pure-CSS lightbox, same pattern as the photo gallery: click a
-       thumbnail to open a full-size playable video overlay. */}}
-  {{ range $i, $clip := $p.clips }}
-    {{ $res := $.Resources.Get $clip.file }}
-    {{ with $res }}
-    <a href="#gallery" id="lightbox-{{ $i }}" class="lightbox-overlay">
-      <video controls style="max-width: 100%; max-height: 100%; border-radius: 0.5rem;" preload="metadata">
-        <source src="{{ .RelPermalink }}">
-      </video>
-    </a>
-    {{ end }}
-  {{ end }}
 </div>
 
+
+<!-- VIDEO LIGHTBOX -->
+
+<div
+  id="video-lightbox"
+  class="lightbox"
+  aria-hidden="true"
+>
+
+  <!-- Close -->
+
+  <button
+    type="button"
+    class="lightbox-close"
+    onclick="closeVideo()"
+  >
+    ×
+  </button>
+
+
+  <!-- Previous -->
+
+  <button
+    type="button"
+    class="lightbox-prev"
+    onclick="previousVideo()"
+  >
+    ‹
+  </button>
+
+
+  <!-- Video -->
+
+  <div class="lightbox-content">
+
+    <video
+      id="lightbox-video"
+      controls
+      playsinline
+      preload="metadata"
+    >
+    </video>
+
+    <div
+      id="video-counter"
+      class="lightbox-counter"
+    >
+    </div>
+
+  </div>
+
+
+  <!-- Next -->
+
+  <button
+    type="button"
+    class="lightbox-next"
+    onclick="nextVideo()"
+  >
+    ›
+  </button>
+
+</div>
+
+
 <style>
-  .photo-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
-    margin-top: 1rem;
+
+.video-grid {
+
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 0.75rem;
+
+  margin-top: 1.5rem;
+
+}
+
+
+@media (min-width: 640px) {
+
+  .video-grid {
+
+    grid-template-columns: repeat(3, 1fr);
+
   }
-  @media (min-width: 640px) {
-    .photo-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
+
+}
+
+
+.video-grid-item {
+
+  position: relative;
+
+  display: block;
+
+  padding: 0;
+
+  border: none;
+
+  background: transparent;
+
+  cursor: pointer;
+
+}
+
+
+.video-grid-item video {
+
+  width: 100%;
+
+  height: 220px;
+
+  object-fit: cover;
+
+  display: block;
+
+  border-radius: 0.5rem;
+
+  border: 1px solid white;
+
+  transition: all 0.15s ease;
+
+}
+
+
+.video-grid-item:hover video {
+
+  border-color: #f9a8d4;
+
+  transform: scale(1.01);
+
+}
+
+
+/* Play button */
+
+.video-play {
+
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  transform: translate(-50%, -50%);
+
+  width: 55px;
+  height: 55px;
+
+  border-radius: 50%;
+
+  background: rgba(0, 0, 0, 0.65);
+
+  color: white;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 20px;
+
+  pointer-events: none;
+
+}
+
+
+/* LIGHTBOX */
+
+.lightbox {
+
+  display: none;
+
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 9999;
+
+  background: rgba(0, 0, 0, 0.94);
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 60px 80px;
+
+}
+
+
+.lightbox.active {
+
+  display: flex;
+
+}
+
+
+.lightbox-content {
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  width: 100%;
+
+  height: 100%;
+
+}
+
+
+#lightbox-video {
+
+  max-width: 90vw;
+
+  max-height: 82vh;
+
+  border-radius: 0.5rem;
+
+}
+
+
+/* Counter */
+
+.lightbox-counter {
+
+  margin-top: 12px;
+
+  color: white;
+
+  font-size: 14px;
+
+  opacity: 0.8;
+
+}
+
+
+/* Buttons */
+
+.lightbox-close,
+.lightbox-prev,
+.lightbox-next {
+
+  position: absolute;
+
+  border: none;
+
+  background: transparent;
+
+  color: white;
+
+  cursor: pointer;
+
+  z-index: 10000;
+
+  transition: opacity 0.15s ease;
+
+}
+
+
+.lightbox-close:hover,
+.lightbox-prev:hover,
+.lightbox-next:hover {
+
+  opacity: 0.6;
+
+}
+
+
+.lightbox-close {
+
+  top: 15px;
+
+  right: 25px;
+
+  font-size: 45px;
+
+}
+
+
+.lightbox-prev {
+
+  left: 20px;
+
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  font-size: 70px;
+
+}
+
+
+.lightbox-next {
+
+  right: 20px;
+
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  font-size: 70px;
+
+}
+
+
+/* Mobile */
+
+@media (max-width: 640px) {
+
+  .lightbox {
+
+    padding: 50px 20px;
+
   }
-  .photo-grid-item {
-    display: block;
+
+  #lightbox-video {
+
+    max-width: 95vw;
+
+    max-height: 75vh;
+
   }
-  .photo-grid-item video {
-    border-radius: 0.5rem;
-    border: 1px solid white;
+
+  .lightbox-prev {
+
+    left: 5px;
+
+    font-size: 50px;
+
   }
-  .photo-grid-item:hover video {
-    border-color: #f9a8d4;
+
+  .lightbox-next {
+
+    right: 5px;
+
+    font-size: 50px;
+
   }
-  .lightbox-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.9);
-    z-index: 50;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
+
+  .lightbox-close {
+
+    right: 15px;
+
+    font-size: 40px;
+
   }
-  .lightbox-overlay:target {
-    display: flex;
-  }
+
+}
+
 </style>
+
+
+<script>
+
+const videoGallery = [
+
+  {{ range $i, $clip := $p.clips }}
+
+    {{ $res := $.Resources.Get $clip.file }}
+
+    {{ with $res }}
+
+      {
+        src: "{{ .RelPermalink }}"
+      }
+
+      {{ if lt (add $i 1) (len $p.clips) }},{{ end }}
+
+    {{ end }}
+
+  {{ end }}
+
+];
+
+
+let currentVideo = 0;
+
+
+function openVideo(index) {
+
+  currentVideo = index;
+
+  updateVideo();
+
+  const lightbox =
+    document.getElementById("video-lightbox");
+
+  lightbox.classList.add("active");
+
+  lightbox.setAttribute("aria-hidden", "false");
+
+  document.body.style.overflow = "hidden";
+
+}
+
+
+function closeVideo() {
+
+  const lightbox =
+    document.getElementById("video-lightbox");
+
+  const video =
+    document.getElementById("lightbox-video");
+
+  video.pause();
+
+  video.removeAttribute("src");
+
+  video.load();
+
+  lightbox.classList.remove("active");
+
+  lightbox.setAttribute("aria-hidden", "true");
+
+  document.body.style.overflow = "";
+
+}
+
+
+function updateVideo() {
+
+  const video =
+    document.getElementById("lightbox-video");
+
+  const counter =
+    document.getElementById("video-counter");
+
+  const clip =
+    videoGallery[currentVideo];
+
+  video.src = clip.src;
+
+  video.load();
+
+  video.play().catch(() => {});
+
+  counter.textContent =
+    `${currentVideo + 1} / ${videoGallery.length}`;
+
+}
+
+
+function nextVideo() {
+
+  currentVideo++;
+
+  if (currentVideo >= videoGallery.length) {
+
+    currentVideo = 0;
+
+  }
+
+  updateVideo();
+
+}
+
+
+function previousVideo() {
+
+  currentVideo--;
+
+  if (currentVideo < 0) {
+
+    currentVideo = videoGallery.length - 1;
+
+  }
+
+  updateVideo();
+
+}
+
+
+/* Keyboard */
+
+document.addEventListener("keydown", function(event) {
+
+  const lightbox =
+    document.getElementById("video-lightbox");
+
+  if (!lightbox.classList.contains("active")) {
+
+    return;
+
+  }
+
+  if (event.key === "Escape") {
+
+    closeVideo();
+
+  }
+
+  if (event.key === "ArrowRight") {
+
+    nextVideo();
+
+  }
+
+  if (event.key === "ArrowLeft") {
+
+    previousVideo();
+
+  }
+
+});
+
+
+/* Click outside to close */
+
+document
+  .getElementById("video-lightbox")
+  .addEventListener("click", function(event) {
+
+    if (event.target === this) {
+
+      closeVideo();
+
+    }
+
+  });
+
+</script>
+
 {{ end }}
