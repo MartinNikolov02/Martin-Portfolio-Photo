@@ -8,20 +8,20 @@
 			{{ with $p.pets }}
 			<div style="display: flex; flex-direction: column; justify-content: flex-start; gap: 0.6rem; padding-top: 0.5rem;">
 				<h2 class="font-semibold" style="font-size: 0.85rem;">Pets:</h2>
-				{{ range . }}
-				<div class="flex" style="align-items: center; gap: 0.4rem;">
-					{{ if .image }}
-						<img src="{{ .image | relURL }}" alt="{{ .name }}" style="width: 2.5rem; height: 2.5rem; object-fit: cover; border-radius: 0.25rem; flex-shrink: 0;">
-					{{ else }}
-						<span style="font-size: 1rem;">{{ .emoji }}</span>
+				<div style="display: grid; grid-template-columns: 2.5rem auto 1fr; align-items: center; column-gap: 0.4rem; row-gap: 0.6rem;">
+					{{ range . }}
+						{{ if .image }}
+							<img src="{{ .image | relURL }}" alt="{{ .name }}" style="width: 2.5rem; height: 2.5rem; object-fit: cover; border-radius: 0.25rem;">
+						{{ else }}
+							<span style="font-size: 1rem;">{{ .emoji }}</span>
+						{{ end }}
+						<span style="font-size: 0.75rem;">{{ .name }}</span>
+						{{ $hpImg := "hp.png" }}
+						{{ if lt .hp 75 }}{{ $hpImg = "halfhp.png" }}{{ end }}
+						{{ with .hpImage }}{{ $hpImg = . }}{{ end }}
+						<img src="{{ $hpImg | relURL }}" alt="HP" style="height: 1.2rem;">
 					{{ end }}
-					<span style="font-size: 0.75rem; flex-shrink: 0;">{{ .name }}</span>
-					{{ $hpImg := "hp.png" }}
-					{{ if lt .hp 75 }}{{ $hpImg = "halfhp.png" }}{{ end }}
-					{{ with .hpImage }}{{ $hpImg = . }}{{ end }}
-					<img src="{{ $hpImg | relURL }}" alt="HP" style="height: 1.2rem; flex-shrink: 0;">
 				</div>
-				{{ end }}
 			</div>
 			{{ end }}
 		</div>
@@ -32,16 +32,16 @@
 	</div>
 	<div class="grid lg:grid-rows-2 gap-4">
 		<div class="not-prose flex cursor-default flex-col rounded-lg border border-white p-6" style="justify-content: flex-start; gap: 0.75rem;">
-			<h2 class="font-semibold" style="font-size: 0.85rem;">Quote of the day:</h2>
+			<h2 class="font-semibold" style="font-size: 0.85rem;">Quote of the day</h2>
 			{{ with $p.statusText }}<div>{{ . | markdownify }}</div>{{ end }}
 		</div>
 		<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
 			<a href="{{ "photos/portfolio/" | relURL }}" class="not-prose flex cursor-pointer flex-col items-center justify-center space-y-2 rounded-lg border border-white p-4 text-center transition-all duration-150 hover:border-pink-300">
-				<span class="text-lg font-semibold">📷</span>
+				<img src="{{ "camera-icon.png" | relURL }}" alt="Camera" style="height: 2rem; width: auto;">
 				<span>Photo Portfolio</span>
 			</a>
 			<a href="{{ "videos/portfolio/" | relURL }}" class="not-prose flex cursor-pointer flex-col items-center justify-center space-y-2 rounded-lg border border-white p-4 text-center transition-all duration-150 hover:border-pink-300">
-				<span class="text-lg font-semibold">🎬</span>
+				<img src="{{ "video-icon.png" | relURL }}" alt="Video camera" style="height: 2rem; width: auto;">
 				<span>Video Portfolio</span>
 			</a>
 		</div>
