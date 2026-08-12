@@ -9,17 +9,17 @@
 			<div style="display: flex; flex-direction: column; justify-content: flex-start; gap: 0.6rem; padding-top: 0.5rem;">
 				<h2 class="font-semibold" style="font-size: 0.85rem;">Pets:</h2>
 				{{ range . }}
-				<div class="flex gap-2" style="align-items: center;">
+				<div class="flex" style="align-items: center; gap: 0.4rem;">
 					{{ if .image }}
 						<img src="{{ .image | relURL }}" alt="{{ .name }}" style="width: 2.5rem; height: 2.5rem; object-fit: cover; border-radius: 0.25rem; flex-shrink: 0;">
 					{{ else }}
 						<span style="font-size: 1rem;">{{ .emoji }}</span>
 					{{ end }}
-					<span style="font-size: 0.75rem; width: 3rem; flex-shrink: 0;">{{ .name }}</span>
+					<span style="font-size: 0.75rem; flex-shrink: 0;">{{ .name }}</span>
 					{{ $hpImg := "hp.png" }}
 					{{ if lt .hp 75 }}{{ $hpImg = "halfhp.png" }}{{ end }}
 					{{ with .hpImage }}{{ $hpImg = . }}{{ end }}
-					<img src="{{ $hpImg | relURL }}" alt="HP" style="height: 1.4rem; flex-shrink: 0; margin-right: 0.5rem;">
+					<img src="{{ $hpImg | relURL }}" alt="HP" style="height: 1.2rem; flex-shrink: 0;">
 				</div>
 				{{ end }}
 			</div>
